@@ -1,0 +1,49 @@
+[
+  {
+    "_id": "1767964983405",
+    "content": "I love you so much baby ❤️😘",
+    "type": "emotion",
+    "mood": "neutral",
+    "userId": "shubhi",
+    "timestamp": "2026-01-09T13:23:03.405Z",
+    "reply": "I love you too baby",
+    "replyTimestamp": "2026-01-09T13:45:23.737Z",
+    "adminRead": true
+  },
+  {
+    "_id": "1767965716816",
+    "content": "his baby\n",
+    "type": "emotion",
+    "mood": "neutral",
+    "userId": "shubhi_xo2yt7bvx",
+    "timestamp": "2026-01-09T13:35:16.816Z",
+    "reply": "his",
+    "replyTimestamp": "2026-01-09T13:45:03.935Z",
+    "adminRead": true,
+    "userRead": true
+  },
+  {
+    "_id": "1767966361576",
+    "content": "hii baby\n",
+    "type": "emotion",
+    "mood": "neutral",
+    "userId": "shubhi_xo2yt7bvx",
+    "timestamp": "2026-01-09T13:46:01.576Z",
+    "reply": "hii",
+    "replyTimestamp": "2026-01-09T13:49:35.010Z",
+    "adminRead": true,
+    "userRead": true
+  },
+  {
+    "_id": "1767966777128",
+    "content": "hii baby",
+    "type": "emotion",
+    "mood": "neutral",
+    "userId": "shubhi_xo2yt7bvx",
+    "timestamp": "2026-01-09T13:52:57.128Z",
+    "adminRead": true,
+    "reply": "hii",
+    "replyTimestamp": "2026-01-09T13:53:20.121Z",
+    "userRead": true
+  }
+]

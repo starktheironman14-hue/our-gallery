@@ -44,9 +44,9 @@ const RadioQuestion = ({ question, options, onSubmit, successMessage, isValidati
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-8 text-center"
+            className="flex flex-col items-center justify-center space-y-8 w-full max-w-lg mx-auto"
         >
-            <h2 className="text-3xl md:text-4xl text-white font-sans">
+            <h2 className="text-3xl md:text-4xl text-white font-sans text-center px-4 leading-relaxed">
                 {question}
             </h2>
 

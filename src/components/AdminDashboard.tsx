@@ -11,6 +11,7 @@ interface Message {
     content: string;
     mood?: string;
     timestamp: string;
+    reply?: string;
 }
 
 const AdminDashboard = ({ onBack }: AdminDashboardProps) => {
@@ -25,22 +26,34 @@ const AdminDashboard = ({ onBack }: AdminDashboardProps) => {
         setError('');
 
         try {
-            const response = await fetch('/api/admin/dashboard', {
+            // 1. Verify Password
+            const loginResponse = await fetch('/api/admin/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ password }),
             });
 
-            const data = await response.json();
+            const loginData = await loginResponse.json();
 
-            if (data.success) {
-                setIsAuthenticated(true);
-                setMessages(data.data.messages || []);
+            if (loginData.success) {
+                // 2. Fetch Messages
+                const msgResponse = await fetch('/api/admin/messages');
+                const msgData = await msgResponse.json();
+
+                if (msgData.success) {
+                    setIsAuthenticated(true);
+                    setMessages(msgData.messages || []);
+
+                    // Mark as read immediately
+                    fetch('/api/admin/mark-read', { method: 'POST' });
+                } else {
+                    setError('Login successful but failed to fetch messages.');
+                }
             } else {
                 setError('Invalid password');
             }
         } catch (err) {
-            setError('Failed to connect. Make sure MongoDB is set up.');
+            setError('Connection failed. Ensure server is running.');
         } finally {
             setLoading(false);
         }
@@ -60,8 +73,37 @@ const AdminDashboard = ({ onBack }: AdminDashboardProps) => {
     const formatDate = (timestamp: string) => {
         return new Date(timestamp).toLocaleString('en-IN', {
             dateStyle: 'medium',
-            timeStyle: 'short',
+            timeStyle: 'medium',
         });
+    };
+
+    const [replyingTo, setReplyingTo] = useState<string | null>(null);
+    const [replyContent, setReplyContent] = useState('');
+    const [sendingReply, setSendingReply] = useState(false);
+
+    const handleReply = async (messageId: string) => {
+        if (!replyContent.trim()) return;
+        setSendingReply(true);
+        try {
+            const res = await fetch('/api/admin/reply', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ messageId, replyContent }),
+            });
+            const data = await res.json();
+            if (data.success) {
+                // Update local state
+                setMessages(prev => prev.map(msg =>
+                    msg._id === messageId ? { ...msg, reply: replyContent } : msg
+                ));
+                setReplyingTo(null);
+                setReplyContent('');
+            }
+        } catch (err) {
+            console.error('Failed to reply', err);
+        } finally {
+            setSendingReply(false);
+        }
     };
 
     if (!isAuthenticated) {
@@ -84,19 +126,33 @@ const AdminDashboard = ({ onBack }: AdminDashboardProps) => {
                         className="glass p-8 rounded-3xl"
                     >
                         <h2 className="text-3xl font-display gradient-text mb-6 text-center">
-                            Admin Dashboard 🔐
+                            Admin Panel 🔐
                         </h2>
 
                         <div className="space-y-4">
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
-                                placeholder="Enter admin password"
-                                className="w-full px-6 py-4 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:border-romantic-400 transition-all"
-                                autoFocus
-                            />
+                            {/* Read-only Username Field */}
+                            <div>
+                                <label className="text-white/70 text-sm font-sans ml-2 mb-1 block">Username</label>
+                                <input
+                                    type="text"
+                                    value="Royal_Singh"
+                                    readOnly
+                                    className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-2xl text-white/50 cursor-not-allowed font-sans"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="text-white/70 text-sm font-sans ml-2 mb-1 block">Password</label>
+                                <input
+                                    type="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                                    placeholder="Enter password..."
+                                    className="w-full px-6 py-4 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:border-romantic-400 transition-all font-sans"
+                                    autoFocus
+                                />
+                            </div>
 
                             {error && (
                                 <p className="text-red-400 text-sm text-center">{error}</p>
@@ -109,7 +165,7 @@ const AdminDashboard = ({ onBack }: AdminDashboardProps) => {
                                 disabled={loading || !password}
                                 className="w-full px-8 py-4 bg-gradient-to-r from-romantic-400 to-romantic-500 text-white rounded-full font-sans text-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                {loading ? 'Logging in...' : 'Login'}
+                                {loading ? 'Checking...' : 'Unlock Panel'}
                             </motion.button>
                         </div>
                     </motion.div>
@@ -174,9 +230,53 @@ const AdminDashboard = ({ onBack }: AdminDashboardProps) => {
                                                 {formatDate(message.timestamp)}
                                             </span>
                                         </div>
-                                        <p className="text-white font-sans text-lg leading-relaxed">
+                                        <p className="text-white font-sans text-lg leading-relaxed mb-4">
                                             {message.content}
                                         </p>
+
+                                        {/* Reply Section */}
+                                        {message.reply ? (
+                                            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                                                <p className="text-xs text-green-400 mb-1 font-bold uppercase tracking-wider">Replied:</p>
+                                                <p className="text-white/80 font-sans italic">"{message.reply}"</p>
+                                            </div>
+                                        ) : (
+                                            replyingTo === message._id ? (
+                                                <div className="mt-4 flex gap-2">
+                                                    <input
+                                                        type="text"
+                                                        value={replyContent}
+                                                        onChange={(e) => setReplyContent(e.target.value)}
+                                                        placeholder="Type your reply..."
+                                                        className="flex-1 bg-black/30 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-romantic-400"
+                                                        autoFocus
+                                                    />
+                                                    <button
+                                                        onClick={() => handleReply(message._id)}
+                                                        disabled={sendingReply}
+                                                        className="bg-romantic-500 hover:bg-romantic-600 text-white px-4 py-2 rounded-lg font-sans transition-colors"
+                                                    >
+                                                        Send
+                                                    </button>
+                                                    <button
+                                                        onClick={() => {
+                                                            setReplyingTo(null);
+                                                            setReplyContent('');
+                                                        }}
+                                                        className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg font-sans transition-colors"
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <button
+                                                    onClick={() => setReplyingTo(message._id)}
+                                                    className="text-sm text-romantic-300 hover:text-romantic-200 font-sans font-medium flex items-center gap-1 transition-colors"
+                                                >
+                                                    ↩ Reply
+                                                </button>
+                                            )
+                                        )}
                                     </div>
                                 </div>
                             </motion.div>

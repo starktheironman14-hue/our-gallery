@@ -12,8 +12,9 @@ import Forever from './components/Forever';
 import AdminDashboard from './components/AdminDashboard';
 import WriteEmotions from './components/WriteEmotions';
 import EntryGate from './components/EntryGate/EntryGate';
+import TelegramMessage from './components/TelegramMessage';
 
-type Page = 'welcome' | 'navigation' | 'memory-lane' | 'midnight-chats' | 'why-you' | 'mood-meter' | 'our-world' | 'always-here' | 'forever' | 'admin' | 'write-emotions';
+type Page = 'welcome' | 'navigation' | 'memory-lane' | 'midnight-chats' | 'why-you' | 'mood-meter' | 'our-world' | 'always-here' | 'forever' | 'admin' | 'write-emotions' | 'telegram-message';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('welcome');
@@ -61,7 +62,10 @@ function App() {
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.6 }}
           >
-            <Navigation onSectionSelect={handleSectionSelect} />
+            <Navigation
+              onSectionSelect={handleSectionSelect}
+              onBack={() => setCurrentPage('welcome')}
+            />
           </motion.div>
         )}
 
@@ -170,6 +174,18 @@ function App() {
             transition={{ duration: 0.6 }}
           >
             <WriteEmotions onBack={handleBack} />
+          </motion.div>
+        )}
+
+        {currentPage === 'telegram-message' && (
+          <motion.div
+            key="telegram-message"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.6 }}
+          >
+            <TelegramMessage onBack={handleBack} />
           </motion.div>
         )}
       </AnimatePresence>

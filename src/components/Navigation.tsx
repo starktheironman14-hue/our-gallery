@@ -1,9 +1,12 @@
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import FloatingEmojis from './FloatingEmojis';
 
 interface NavigationProps {
     onSectionSelect: (section: string) => void;
+    onBack: () => void;
 }
+
 
 interface Section {
     id: string;
@@ -70,9 +73,57 @@ const sections: Section[] = [
         subtitle: 'Your current feelings',
         gradient: 'from-pink-600 to-purple-600',
     },
+    {
+        id: 'telegram-message',
+        emoji: '📱',
+        title: 'Direct Message',
+        subtitle: 'Send to my phone',
+        gradient: 'from-blue-600 to-indigo-600',
+    },
 ];
 
-const Navigation = ({ onSectionSelect }: NavigationProps) => {
+const Navigation = ({ onSectionSelect, onBack }: NavigationProps) => {
+    const [replyCount, setReplyCount] = useState(0);
+    const [adminMsgCount, setAdminMsgCount] = useState(0);
+
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            const userId = localStorage.getItem('companion_userId') || 'shubhi';
+            try {
+                // 1. Check Inbox Replies (for User)
+                const resUser = await fetch(`/api/messages/user/${userId}`);
+                const dataUser = await resUser.json();
+                if (dataUser.success) {
+                    // Count replies that are NOT read by user
+                    const count = dataUser.messages.filter((msg: any) => msg.reply && msg.userRead === false).length;
+                    setReplyCount(count);
+                }
+
+                // 2. Check Admin Messages (for Admin)
+                // We fetch all messages to see if any are unread by admin
+                // This is lightweight enough for now
+                const resAdmin = await fetch('/api/admin/messages');
+                const dataAdmin = await resAdmin.json();
+                if (dataAdmin.success) {
+                    // Count messages NOT read by admin
+                    // If field is missing (old messages), assume unread or read? 
+                    // Let's assume unread if explicit adminRead is strictly false or undefined? 
+                    // Actually, undefined usually means old. Let's say if (msg.adminRead === false).
+                    const count = dataAdmin.messages.filter((msg: any) => msg.adminRead === false).length;
+                    setAdminMsgCount(count);
+                }
+
+            } catch (err) {
+                console.error("Failed to fetch notifications", err);
+            }
+        };
+
+        fetchNotifications();
+        // Poll every 10 seconds for faster updates
+        const interval = setInterval(fetchNotifications, 10000);
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <section className="relative min-h-screen py-20 px-6 bg-gradient-to-br from-rose-950 via-black to-rose-950 overflow-hidden">
             {/* Floating emojis */}
@@ -85,8 +136,37 @@ const Navigation = ({ onSectionSelect }: NavigationProps) => {
                     initial={{ opacity: 0, y: -30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1 }}
-                    className="text-center mb-16"
+                    className="text-center mb-16 relative"
                 >
+                    {/* Back Button */}
+                    <motion.button
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 2 }}
+                        onClick={onBack}
+                        className="absolute -top-12 left-0 glass px-6 py-2 rounded-full text-white hover:text-white/80 transition-colors text-sm font-sans flex items-center gap-2"
+                    >
+                        <span>←</span> Back
+                    </motion.button>
+
+                    {/* Admin Button */}
+                    <div className="absolute -top-12 right-0">
+                        <motion.button
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 2 }}
+                            onClick={() => onSectionSelect('admin')}
+                            className="glass px-6 py-2 rounded-full text-white hover:text-white/80 transition-colors text-sm font-sans flex items-center gap-2 relative"
+                        >
+                            <span>🔒</span> Admin
+                            {adminMsgCount > 0 && (
+                                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-bold shadow-md">
+                                    {adminMsgCount}
+                                </span>
+                            )}
+                        </motion.button>
+                    </div>
+
                     <div className="glass inline-block px-10 py-6 rounded-[2rem] border border-white/20">
                         <motion.h1
                             className="text-5xl md:text-7xl font-display gradient-text mb-4"
@@ -120,6 +200,17 @@ const Navigation = ({ onSectionSelect }: NavigationProps) => {
                             onClick={() => onSectionSelect(section.id)}
                             className="relative group glass p-8 overflow-hidden"
                         >
+                            {/* Notification Badge */}
+                            {section.id === 'write-emotions' && replyCount > 0 && (
+                                <motion.div
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    className="absolute top-4 left-4 z-20 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shadow-lg border-2 border-white/20"
+                                >
+                                    {replyCount}
+                                </motion.div>
+                            )}
+
                             {/* Gradient background on hover */}
                             <div className={`absolute inset-0 bg-gradient-to-br ${section.gradient} opacity-0 group-hover:opacity-20 transition-opacity duration-300`} />
 

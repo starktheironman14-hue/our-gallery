@@ -43,6 +43,18 @@ const Welcome = ({ onEnter }: WelcomeProps) => {
 
             {/* Content */}
             <div className="relative z-10 px-6 max-w-3xl">
+                {/* Top Heading */}
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1.5, delay: 0.5 }}
+                    className="glass px-8 py-4 rounded-2xl mb-12 inline-block"
+                >
+                    <h2 className="text-2xl md:text-4xl font-display text-white tracking-wider uppercase">
+                        Our Personal Digital Diary
+                    </h2>
+                </motion.div>
+
                 {/* Breathing heart */}
                 <motion.div
                     animate={{

@@ -152,7 +152,7 @@ const EntryGate = ({ onSuccess }: EntryGateProps) => {
                                 question="What do you call him?"
                                 placeholder="Type the name you use…"
                                 onSubmit={handleQ1Submit}
-                                successMessage="That felt familiar."
+                                successMessage="That felt familiar... The way you say it makes his heart skip a beat ❤️🦋"
                                 isValidating={isValidating}
                             />
                         </motion.div>
@@ -169,7 +169,7 @@ const EntryGate = ({ onSuccess }: EntryGateProps) => {
                                 question="What does he calls you?"
                                 placeholder="Your Nickname"
                                 onSubmit={handleQ2Submit}
-                                successMessage="Of course… 🤍"
+                                successMessage="Of course… You are his sweet little Kitkat 🍫✨"
                                 isValidating={isValidating}
                             />
                         </motion.div>
@@ -186,7 +186,7 @@ const EntryGate = ({ onSuccess }: EntryGateProps) => {
                                 question="When did we really start talking?"
                                 options={['4 December', '29 February', '17 July', '3 June']}
                                 onSubmit={handleQ3Submit}
-                                successMessage="You remember…"
+                                successMessage="You remember… That day changed everything forever 📅💑"
                                 isValidating={isValidating}
                             />
                         </motion.div>
@@ -203,7 +203,7 @@ const EntryGate = ({ onSuccess }: EntryGateProps) => {
                                 question="What you answer always when he asks you who are you 🥰😁"
                                 placeholder="Tell me who you are…"
                                 onSubmit={handleQ4Submit}
-                                successMessage="That's the only right answer."
+                                successMessage="That's the only right answer. You are his wifey, now and always 👰💍💖"
                                 isValidating={isValidating}
                             />
                         </motion.div>
@@ -220,7 +220,7 @@ const EntryGate = ({ onSuccess }: EntryGateProps) => {
                                 question="What do you reply always when he asks where are you? 🤔💕"
                                 placeholder="Say it the way you feel…"
                                 onSubmit={handleQ5Submit}
-                                successMessage="I know where you belong."
+                                successMessage="I know where you belong... Safest place in the world 🏠❤️"
                                 isValidating={isValidating}
                             />
                         </motion.div>
