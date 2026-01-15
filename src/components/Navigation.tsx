@@ -38,8 +38,10 @@ const Navigation = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center mb-12"
                 >
-                    <h1 className="text-4xl md:text-5xl font-bold mb-4 font-display">Where do you want to go?</h1>
-                    <p className="text-xl text-gray-400 font-sans">Choose a path to explore ❤️</p>
+                    <div className="inline-block px-10 py-6 rounded-[2rem] bg-gradient-to-r from-indigo-900/90 via-purple-900/90 to-pink-900/90 border border-white/20 shadow-2xl backdrop-blur-none">
+                        <h1 className="text-4xl md:text-5xl font-bold mb-2 font-display bg-clip-text text-transparent bg-gradient-to-r from-blue-200 via-pink-200 to-white">Where do you want to go?</h1>
+                        <p className="text-xl text-gray-200 font-sans">Choose a path to explore ❤️</p>
+                    </div>
                 </motion.div>
 
                 <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

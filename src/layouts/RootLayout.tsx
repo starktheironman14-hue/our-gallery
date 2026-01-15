@@ -1,8 +1,9 @@
-import { Outlet, useLocation } from 'react-router-dom';
+import { useLocation, useOutlet } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const RootLayout = () => {
     const location = useLocation();
+    const element = useOutlet();
 
     return (
         <AnimatePresence mode="wait">
@@ -14,7 +15,7 @@ const RootLayout = () => {
                 transition={{ duration: 0.5 }}
                 className="w-full min-h-screen"
             >
-                <Outlet />
+                {element}
             </motion.div>
         </AnimatePresence>
     );

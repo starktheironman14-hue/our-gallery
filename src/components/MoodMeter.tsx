@@ -28,6 +28,54 @@ const moods = [
         animation: ['🌙', '💤', '☁️', '✨'],
         message: 'Rest, Shubhi. I\'ll guard your peace 😌'
     },
+    {
+        emoji: '🤩',
+        name: 'Excited',
+        animation: ['🎉', '🎊', '✨', '🕺'],
+        message: 'Your happiness is my favourite vibe! Let\'s celebrate! 🥳'
+    },
+    {
+        emoji: '😌',
+        name: 'Relaxed',
+        animation: ['🍃', '☕', '🧘‍♀️', '🌸'],
+        message: 'Just breathe, baby. I\'m your calm. 🤍'
+    },
+    {
+        emoji: '😣',
+        name: 'Stressed',
+        animation: ['💆‍♀️', '🫂', '🌬️', '🤍'],
+        message: 'You got this, and I got you. Always. 💪❤️'
+    },
+    {
+        emoji: '🙏',
+        name: 'Grateful',
+        animation: ['✨', '💖', '🤲', '🌺'],
+        message: 'And I am grateful for YOU, every single day. 🌹'
+    },
+    {
+        emoji: '😐',
+        name: 'Bored',
+        animation: ['🥱', '📺', '🎮', '💭'],
+        message: 'Talk to me? I\'m your entertainment 24/7! 😜'
+    },
+    {
+        emoji: '🥰',
+        name: 'In Love',
+        animation: ['😘', '💏', '💑', '❤️'],
+        message: 'Falling for you deeper every second. 💘'
+    },
+    {
+        emoji: '🤪',
+        name: 'Goofy',
+        animation: ['👻', '🤡', '💃', '🕺'],
+        message: 'Let\'s be weird together! 🤪💕'
+    },
+    {
+        emoji: '😎',
+        name: 'Proud',
+        animation: ['👑', '🦁', '🌟', '🏆'],
+        message: 'That\'s my girl! So proud of you! 👑✨'
+    },
 ];
 
 const MoodMeter = () => {

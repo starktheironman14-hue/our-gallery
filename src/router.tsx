@@ -12,11 +12,13 @@ import Forever from './components/Forever';
 import AdminDashboard from './components/AdminDashboard';
 import WriteEmotions from './components/WriteEmotions';
 import TelegramMessage from './components/TelegramMessage';
+import ErrorPage from './components/ErrorPage';
 
 export const router = createBrowserRouter([
     {
         path: '/',
         element: <RootLayout />,
+        errorElement: <ErrorPage />,
         children: [
             { index: true, element: <Welcome /> },
             { path: 'navigation', element: <Navigation /> },
