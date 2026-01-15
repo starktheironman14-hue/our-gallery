@@ -1,12 +1,11 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import FloatingEmojis from './FloatingEmojis';
 
-interface ForeverProps {
-    onBack: () => void;
-}
-
-const Forever = ({ onBack }: ForeverProps) => {
+const Forever = () => {
+    const navigate = useNavigate();
+    const onBack = () => navigate('/navigation');
     const [showRing, setShowRing] = useState(false);
 
     return (

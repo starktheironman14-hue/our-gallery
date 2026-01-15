@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
 
-interface NavigationProps {
-    onSectionSelect: (section: string) => void;
-}
+import { useNavigate } from 'react-router-dom';
 
-const Navigation = ({ onSectionSelect }: NavigationProps) => {
+const Navigation = () => {
+    const navigate = useNavigate();
+    const onSectionSelect = (section: string) => navigate(`/${section}`);
     const sections = [
         { id: 'memory-lane', label: 'Memory Lane', emoji: '📸', color: 'from-blue-500 to-cyan-500' },
         { id: 'midnight-chats', label: 'Midnight Chats', emoji: '🌙', color: 'from-purple-500 to-pink-500' },

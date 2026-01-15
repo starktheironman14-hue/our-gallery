@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import FloatingEmojis from './FloatingEmojis';
 
-interface TelegramMessageProps {
-    onBack: () => void;
-}
 
-const TelegramMessage = ({ onBack }: TelegramMessageProps) => {
+
+const TelegramMessage = () => {
+    const navigate = useNavigate();
+    const onBack = () => navigate('/navigation');
     const [message, setMessage] = useState('');
     const [isActive, setIsActive] = useState(false);
 
@@ -79,8 +80,8 @@ const TelegramMessage = ({ onBack }: TelegramMessageProps) => {
                         onClick={handleSend}
                         disabled={!message.trim()}
                         className={`w-full py-3 rounded-xl font-bold font-sans flex items-center justify-center gap-2 transition-all ${message.trim()
-                                ? 'bg-[#2AABEE] text-white shadow-lg shadow-[#2AABEE]/30'
-                                : 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                            ? 'bg-[#2AABEE] text-white shadow-lg shadow-[#2AABEE]/30'
+                            : 'bg-gray-700 text-gray-400 cursor-not-allowed'
                             }`}
                     >
                         <span>Send Message</span>

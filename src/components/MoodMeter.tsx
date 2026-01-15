@@ -1,10 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import FloatingEmojis from './FloatingEmojis';
-
-interface MoodMeterProps {
-    onBack: () => void;
-}
 
 const moods = [
     {
@@ -33,7 +30,9 @@ const moods = [
     },
 ];
 
-const MoodMeter = ({ onBack }: MoodMeterProps) => {
+const MoodMeter = () => {
+    const navigate = useNavigate();
+    const onBack = () => navigate('/navigation');
     const [selectedMood, setSelectedMood] = useState<number | null>(null);
 
     return (

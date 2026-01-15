@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // Use same interface as before
 interface Message {
@@ -9,10 +10,6 @@ interface Message {
     sender: string;
     text: string;
     time: string;
-}
-
-interface MidnightChatsProps {
-    onBack: () => void;
 }
 
 const initialConversationSeed = [
@@ -40,7 +37,9 @@ const emojiCategories = [
     { name: 'Food & Drink 🍓', emojis: ['🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🍈', '🍒', '🍑', '🥭', '🍍', '🥥', '🥝', '🍅', '🥑', '🍆', '🌶', '🌽', '🥕', '🥔', '🥖', '🥨', '🥯', '🥞', '🧀', '🍖', '🍗', '🥩', '🥓', '🍔', '🍟', '🍕', '🌭', '🥪', '🌮', '🌯', '🥚', '🍳', '🥘', '🍲', '🥣', '🥗', '🍿', '🧂', '🥫', '🍱', '🍘', '🍙', '🍚', '🍛', '🍜', '🍝', '🍠', '🍢', '🍣', '🍤', '🍥', '🥮', '🍡', '🥟', '🥠', '🥡', '🍦', '🍧', '🍨', '🍩', '🍪', '🎂', '🍰', '🧁', '🥧', '🍫', '🍬', '🍭', '🍮', '🍯'] }
 ];
 
-const MidnightChats = ({ onBack }: MidnightChatsProps) => {
+const MidnightChats: React.FC = () => {
+    const navigate = useNavigate();
+    const onBack = () => navigate('/navigation');
     // Auth state: 'locked', 'aaru', 'shubhi'
     const [accessState, setAccessState] = useState<'locked' | 'aaru' | 'shubhi'>('locked');
     const [pin, setPin] = useState('');
@@ -51,7 +50,7 @@ const MidnightChats = ({ onBack }: MidnightChatsProps) => {
 
     // Delete Interaction State
     const [showDeleteMenu, setShowDeleteMenu] = useState<string | null>(null); // holds message _id
-    const longPressTimeout = useRef<NodeJS.Timeout | null>(null);
+    const longPressTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const chatEndRef = useRef<HTMLDivElement>(null);
     const categoryRefs = useRef<(HTMLDivElement | null)[]>([]);

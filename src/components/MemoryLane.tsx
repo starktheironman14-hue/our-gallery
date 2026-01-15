@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import FloatingEmojis from './FloatingEmojis';
 import MediaBox from './MediaBox';
 import {
@@ -12,13 +13,11 @@ import {
     yourGifts
 } from '../data/memories';
 
-interface MemoryLaneProps {
-    onBack: () => void;
-}
-
 type ViewMode = 'tabs' | 'special' | 'sexy' | 'together' | 'firstmeet' | 'gift' | 'yourgifts';
 
-const MemoryLane = ({ onBack }: MemoryLaneProps) => {
+const MemoryLane = () => {
+    const navigate = useNavigate();
+    const onBack = () => navigate('/navigation');
     const [activeTab, setActiveTab] = useState<'me' | 'kitkat'>('me');
     const [viewMode, setViewMode] = useState<ViewMode>('tabs');
 

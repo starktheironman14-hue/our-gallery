@@ -1,10 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import FloatingEmojis from './FloatingEmojis';
-
-interface OurWorldProps {
-    onBack: () => void;
-}
 
 const apps = [
     {
@@ -37,7 +34,9 @@ const apps = [
     },
 ];
 
-const OurWorld = ({ onBack }: OurWorldProps) => {
+const OurWorld = () => {
+    const navigate = useNavigate();
+    const onBack = () => navigate('/navigation');
     const [selectedApp, setSelectedApp] = useState<number | null>(null);
 
     return (

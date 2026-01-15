@@ -1,11 +1,10 @@
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import FloatingEmojis from './FloatingEmojis';
 
-interface AlwaysHereProps {
-    onBack: () => void;
-}
-
-const AlwaysHere = ({ onBack }: AlwaysHereProps) => {
+const AlwaysHere = () => {
+    const navigate = useNavigate();
+    const onBack = () => navigate('/navigation');
     return (
         <motion.section
             initial={{ opacity: 0 }}

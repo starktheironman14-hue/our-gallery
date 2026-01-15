@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
-interface AdminDashboardProps {
-    onBack: () => void;
-}
+
 
 interface Message {
     _id: string;
@@ -14,7 +13,9 @@ interface Message {
     reply?: string;
 }
 
-const AdminDashboard = ({ onBack }: AdminDashboardProps) => {
+const AdminDashboard = () => {
+    const navigate = useNavigate();
+    const onBack = () => navigate('/navigation');
     const [password, setPassword] = useState('');
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);

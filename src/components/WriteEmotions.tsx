@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import FloatingEmojis from './FloatingEmojis';
 
-interface WriteEmotionsProps {
-    onBack: () => void;
-}
 
-const WriteEmotions = ({ onBack }: WriteEmotionsProps) => {
+
+const WriteEmotions = () => {
+    const navigate = useNavigate();
+    const onBack = () => navigate('/navigation');
     const [theme, setTheme] = useState('');
     const [emotion, setEmotion] = useState('');
 

@@ -1,11 +1,16 @@
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
-interface WhyYouProps {
-    onBack: () => void;
-}
+interface WhyYouProps { }
 
 
-const WhyYou = ({ onBack }: WhyYouProps) => {
+const WhyYou = () => {
+    const navigate = useNavigate();
+
+    const onBack = () => {
+        navigate(-1);
+    };
+
     return (
         <section className="relative min-h-screen w-full py-20 px-6 overflow-hidden bg-black flex items-center justify-center">
             {/* Background Image Container with 10px spacing acting as a frame */}

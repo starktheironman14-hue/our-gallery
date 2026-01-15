@@ -2,11 +2,11 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import FloatingEmojis from './FloatingEmojis';
 
-interface WelcomeProps {
-    onEnter: () => void;
-}
+import { useNavigate } from 'react-router-dom';
 
-const Welcome = ({ onEnter }: WelcomeProps) => {
+const Welcome = () => {
+    const navigate = useNavigate();
+    const onEnter = () => navigate('/navigation');
     const [showFirstLine, setShowFirstLine] = useState(false);
     const [showSecondLine, setShowSecondLine] = useState(false);
     const [showThirdLine, setShowThirdLine] = useState(false);

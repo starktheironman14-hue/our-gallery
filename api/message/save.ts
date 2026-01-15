@@ -1,28 +1,29 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import clientPromise from '../../../lib/mongodb';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+import clientPromise from '../lib/mongodb';
 
 export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
+    req: VercelRequest,
+    res: VercelResponse
 ) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
     try {
-        const { userId, mood, emoji } = req.body;
+        const { userId, type, content, mood } = req.body;
 
-        if (!userId || !mood || !emoji) {
+        if (!userId || !type || !content) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
 
         const client = await clientPromise;
         const db = client.db('emotional-companion');
 
-        const moodEntry = await db.collection('moods').insertOne({
+        const message = await db.collection('messages').insertOne({
             userId,
-            mood,
-            emoji,
+            type, // 'thought', 'sentence', 'anger'
+            content,
+            mood: mood || null,
             timestamp: new Date(),
         });
 
@@ -34,10 +35,10 @@ export default async function handler(
 
         res.status(201).json({
             success: true,
-            moodId: moodEntry.insertedId
+            messageId: message.insertedId
         });
     } catch (error) {
-        console.error('Error saving mood:', error);
-        res.status(500).json({ error: 'Failed to save mood' });
+        console.error('Error saving message:', error);
+        res.status(500).json({ error: 'Failed to save message' });
     }
 }
