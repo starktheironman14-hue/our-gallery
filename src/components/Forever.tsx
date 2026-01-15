@@ -10,41 +10,36 @@ const Forever = ({ onBack }: ForeverProps) => {
     const [showRing, setShowRing] = useState(false);
 
     return (
-        <section className="relative min-h-screen py-20 px-6 bg-gradient-to-br from-rose-950 via-black to-rose-950 overflow-hidden flex items-center justify-center">
-            <FloatingEmojis position="all" />
-
-            {/* Stars */}
-            <div className="absolute inset-0">
-                {[...Array(40)].map((_, i) => (
-                    <motion.div
-                        key={i}
-                        className="absolute w-1 h-1 bg-white rounded-full twinkle"
-                        style={{
-                            left: `${Math.random() * 100}%`,
-                            top: `${Math.random() * 100}%`,
-                        }}
-                    />
-                ))}
+        <motion.section
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="relative min-h-screen py-20 px-6 bg-black overflow-hidden flex items-center justify-center"
+        >
+            {/* Background Image Container with 10px spacing acting as a frame */}
+            <div className="absolute inset-[10px] rounded-[20px] overflow-hidden z-0 shadow-2xl border border-white/10">
+                <div
+                    className="absolute inset-0 bg-center bg-no-repeat"
+                    style={{
+                        backgroundImage: 'url("/forever_bg_v2.webp")',
+                        backgroundSize: '100% 100%' // Stretch to fit
+                    }}
+                />
+                {/* Dark overlay for readability */}
+                <div className="absolute inset-0 bg-black/40" />
             </div>
 
-            {/* Romantic glow */}
-            <motion.div
-                animate={{
-                    opacity: [0.05, 0.15, 0.05],
-                    scale: [1, 1.2, 1],
-                }}
-                transition={{ duration: 8, repeat: Infinity }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-romantic-500 rounded-full blur-3xl"
-            />
+            <FloatingEmojis position="all" />
 
-            <div className="relative z-10 max-w-4xl mx-auto text-center">
-                {/* Back button */}
+            {/* Content */}
+            <div className="relative z-10 w-full h-full max-w-4xl mx-auto flex flex-col items-center justify-center">
+                {/* Back Button */}
                 <motion.button
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     whileHover={{ scale: 1.05, x: -5 }}
                     onClick={onBack}
-                    className="glass px-6 py-3 rounded-full text-white font-sans mb-8 flex items-center gap-2 absolute top-0 left-0"
+                    className="absolute top-8 left-6 glass px-6 py-3 rounded-full text-white font-sans flex items-center gap-2 z-20"
                 >
                     ← Back
                 </motion.button>
@@ -52,133 +47,53 @@ const Forever = ({ onBack }: ForeverProps) => {
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 1.5 }}
-                    className="space-y-12 mt-20"
+                    transition={{ duration: 1 }}
+                    className="glass p-8 md:p-12 rounded-[2.5rem] border border-white/20 shadow-2xl backdrop-blur-md max-w-3xl text-center flex flex-col gap-8 mt-16"
                 >
-                    {/* Video */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 1.5 }}
-                        className="glass p-6 rounded-3xl inline-block mb-8"
-                    >
-                        <h3 className="text-xl md:text-2xl font-display text-white mb-4">
-                            Every second with you is my favorite movie 🎬💑
-                        </h3>
-                        <video
-                            src="/anshu/WhatsApp Video 2025-12-31 at 14.27.01.mp4"
-                            controls
-                            className="w-full max-w-2xl rounded-2xl"
-                            poster="/anshu/WhatsApp Image 2025-12-31 at 14.26.56 (1).jpeg"
-                        >
-                            Your browser does not support the video tag.
-                        </video>
-                    </motion.div>
+                    <h2 className="text-3xl md:text-5xl font-display text-white mb-2 shadow-black drop-shadow-lg">
+                        Hamesha Sath... Hamesha Pas ❤️♾️
+                    </h2>
 
-                    {/* Infinity symbol */}
-                    <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                        className="text-9xl"
-                    >
-                        ♾️
-                    </motion.div>
+                    <div className="text-lg md:text-xl font-sans text-white/90 leading-relaxed space-y-6">
+                        <p>
+                            Zindagi ka safar chahe kaisa bhi ho, manzil tum hi rahogi. Jab bhi mein peeche mud kar dekhunga, main chahta hu ki tumhari muskurahat mere sath ho.
+                            Wada karta hu, tumhare har aansu ko khushi mein badal dunga aur tumhari har khushi ko apni duniya bana lunga.
+                            Humara rishta sirf aaj ka nahi, har jamam ka hai. 🌹
+                        </p>
+                        <p>
+                            Tum mere har sawal ka jawab ho, meri har dua ka asar ho. Main tumhare sath sirf waqt nahi bitana chahta, main tumhare sath puri zindagi jeena chahta hu.
+                            Subah ki pehli chai se lekar, raat ki aakhri goodnight tak—bas tum. You are my safe place, my home, my forever. 💑
+                        </p>
+                        <p>
+                            Kitkat, tumse pyaar karna meri aadat nahi, meri saans ban gayi hai. Chahe puri duniya badal jaye, humara ye sath kabhi nahi badlega.
+                            Main hamesha tumhara hath thame rahunga, har mushkil mein, har khushi mein. I love you endlessly, beyond words, beyond time. ✨❤️
+                        </p>
+                    </div>
 
-                    {/* Message */}
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.5, duration: 1.5 }}
-                        className="space-y-8"
-                    >
-                        <div className="glass inline-block px-10 py-6 rounded-[2rem] border border-white/20">
-                            <p className="text-3xl md:text-5xl gradient-text font-display mb-4">
-                                With you, Shubhi
-                            </p>
-                            <p className="text-2xl md:text-4xl text-romantic-200 font-display">
-                                I'm ready for everything ✨
-                            </p>
-                            <p className="text-xl md:text-2xl text-gray-300 font-sans italic mt-8">
-                                Loving you is the one thing<br />
-                                I never want to debug, Kitkat 💕
-                            </p>
-                        </div>
-                    </motion.div>
-
-                    {/* Ring animation */}
-                    <motion.button
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 1.5, duration: 1 }}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        onClick={() => setShowRing(true)}
-                        className="glass px-8 py-4 rounded-full text-lg text-white font-sans"
-                    >
-                        Click for a promise 💍
-                    </motion.button>
-
-                    {/* Ring reveal */}
-                    {showRing && (
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ type: "spring", stiffness: 200 }}
-                            className="relative"
-                        >
-                            <motion.div
-                                animate={{
-                                    rotate: [0, 360],
-                                    scale: [1, 1.2, 1],
-                                }}
-                                transition={{ duration: 2, repeat: Infinity }}
-                                className="text-8xl"
+                    {/* Ring Promise Section */}
+                    <div className="mt-4 flex justify-center">
+                        {!showRing ? (
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                onClick={() => setShowRing(true)}
+                                className="glass px-8 py-3 rounded-full text-white/90 hover:text-white transition-all font-display tracking-wide border border-white/30"
                             >
-                                💍
+                                A Little Promise? 💍
+                            </motion.button>
+                        ) : (
+                            <motion.div
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                className="flex flex-col items-center gap-2"
+                            >
+                                <span className="text-4xl">💍</span>
+                                <span className="text-2xl font-handwriting text-romantic-200">Forever Yours</span>
                             </motion.div>
-
-                            {/* Sparkles */}
-                            {[...Array(8)].map((_, i) => (
-                                <motion.span
-                                    key={i}
-                                    className="absolute text-3xl"
-                                    style={{
-                                        left: '50%',
-                                        top: '50%',
-                                    }}
-                                    animate={{
-                                        x: [0, (Math.cos(i * 45 * Math.PI / 180) * 60)],
-                                        y: [0, (Math.sin(i * 45 * Math.PI / 180) * 60)],
-                                        opacity: [0, 1, 0],
-                                    }}
-                                    transition={{
-                                        duration: 2,
-                                        repeat: Infinity,
-                                        delay: i * 0.1,
-                                    }}
-                                >
-                                    ✨
-                                </motion.span>
-                            ))}
-                        </motion.div>
-                    )}
-
-                    {/* Signature */}
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 2, duration: 1.5 }}
-                        className="pt-12"
-                    >
-                        <div className="glass px-8 py-4 inline-block">
-                            <p className="text-xl text-romantic-300 font-handwriting">
-                                Forever yours,<br />only for you Kitkat 💝
-                            </p>
-                        </div>
-                    </motion.div>
+                        )}
+                    </div>
                 </motion.div>
             </div>
-        </section>
+        </motion.section>
     );
 };
 

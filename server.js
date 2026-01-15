@@ -3,7 +3,10 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import fetch from 'node-fetch';
-import mongoose from 'mongoose'; // Added mongoose
+import { kv } from '@vercel/kv';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 
@@ -14,31 +17,65 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI;
+// --- DATA LAYER ABSTRACTION ---
 
-if (!MONGODB_URI) {
-    console.warn("⚠️ MONGODB_URI is missing in .env file. Database features will not work.");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const DATA_FILE = path.join(__dirname, 'messages.json');
+
+// Initialize local file if needed
+if (!process.env.KV_REST_API_URL && !fs.existsSync(DATA_FILE)) {
+    fs.writeFileSync(DATA_FILE, JSON.stringify([]));
 }
 
-mongoose.connect(MONGODB_URI)
-    .then(() => console.log('✅ Connected to MongoDB Atlas'))
-    .catch(err => console.error('❌ MongoDB Connection Error:', err));
+const db = {
+    async getMessages() {
+        if (process.env.KV_REST_API_URL) {
+            // Vercel KV
+            const messages = await kv.get('messages');
+            return messages || [];
+        } else {
+            // Local FS
+            try {
+                if (!fs.existsSync(DATA_FILE)) return [];
+                const data = fs.readFileSync(DATA_FILE, 'utf8');
+                return JSON.parse(data);
+            } catch (error) {
+                console.error("Error reading local file:", error);
+                return [];
+            }
+        }
+    },
 
-// Database Schema
-const messageSchema = new mongoose.Schema({
-    userId: { type: String, required: true },
-    content: { type: String, required: true },
-    type: { type: String, default: 'message' },
-    mood: String,
-    timestamp: { type: Date, default: Date.now },
-    reply: String,
-    replyTimestamp: Date,
-    adminRead: { type: Boolean, default: false },
-    userRead: { type: Boolean, default: false }
-});
+    async saveMessages(messages) {
+        if (process.env.KV_REST_API_URL) {
+            // Vercel KV
+            await kv.set('messages', messages);
+        } else {
+            // Local FS
+            fs.writeFileSync(DATA_FILE, JSON.stringify(messages, null, 2));
+        }
+    },
 
-const Message = mongoose.model('Message', messageSchema);
+    async addMessage(message) {
+        const messages = await this.getMessages();
+        messages.push(message);
+        await this.saveMessages(messages);
+        return message;
+    },
+
+    async updateMessage(id, updates) {
+        const messages = await this.getMessages();
+        const index = messages.findIndex(m => m._id === id || m.id === id); // Handle both for safety
+
+        if (index === -1) return null;
+
+        messages[index] = { ...messages[index], ...updates };
+        await this.saveMessages(messages);
+        return messages[index];
+    }
+};
+
 
 // Telegram Config
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
@@ -55,14 +92,18 @@ app.post('/api/message/save', async (req, res) => {
             return res.status(400).json({ success: false, error: 'Content is required' });
         }
 
-        const newMessage = await Message.create({
+        const newMessage = {
+            _id: Date.now().toString(), // Simple ID generation
             userId: userId || 'anonymous',
             type: type || 'message',
             content,
             mood: mood || 'neutral',
-            timestamp: new Date(),
-            adminRead: false
-        });
+            timestamp: new Date().toISOString(),
+            adminRead: false,
+            userRead: false
+        };
+
+        await db.addMessage(newMessage);
 
         return res.status(200).json({ success: true, message: 'Message saved', data: newMessage });
     } catch (error) {
@@ -85,9 +126,10 @@ app.post('/api/admin/login', (req, res) => {
 // 3. Get All Messages (Protected)
 app.get('/api/admin/messages', async (req, res) => {
     try {
+        const messages = await db.getMessages();
         // Return latest first
-        const messages = await Message.find().sort({ timestamp: -1 });
-        return res.status(200).json({ success: true, messages });
+        const sortedMessages = messages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        return res.status(200).json({ success: true, messages: sortedMessages });
     } catch (error) {
         console.error('Error reading messages:', error);
         return res.status(500).json({ success: false, error: 'Failed to retrieve messages' });
@@ -103,15 +145,11 @@ app.post('/api/admin/reply', async (req, res) => {
             return res.status(400).json({ success: false, error: 'Missing required fields' });
         }
 
-        const updatedMessage = await Message.findByIdAndUpdate(
-            messageId,
-            {
-                reply: replyContent,
-                replyTimestamp: new Date(),
-                userRead: false
-            },
-            { new: true } // Return updated doc
-        );
+        const updatedMessage = await db.updateMessage(messageId, {
+            reply: replyContent,
+            replyTimestamp: new Date().toISOString(),
+            userRead: false // Mark unread for user
+        });
 
         if (!updatedMessage) {
             return res.status(404).json({ success: false, error: 'Message not found' });
@@ -129,13 +167,15 @@ app.post('/api/admin/reply', async (req, res) => {
 app.get('/api/messages/user/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
-        // Ensure we handle "undefined" string case just in case
         if (!userId || userId === 'undefined') {
             return res.status(400).json({ success: false, error: 'User ID required' });
         }
 
+        const messages = await db.getMessages();
         // Filter messages for this user
-        const userMessages = await Message.find({ userId }).sort({ timestamp: -1 });
+        const userMessages = messages
+            .filter(m => m.userId === userId)
+            .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
         return res.status(200).json({ success: true, messages: userMessages });
     } catch (error) {
@@ -147,7 +187,21 @@ app.get('/api/messages/user/:userId', async (req, res) => {
 // 6. Mark Read Endpoints
 app.post('/api/admin/mark-read', async (req, res) => {
     try {
-        await Message.updateMany({ adminRead: false }, { adminRead: true });
+        const messages = await db.getMessages();
+        let changed = false;
+
+        const updatedMessages = messages.map(msg => {
+            if (msg.adminRead === false) {
+                changed = true;
+                return { ...msg, adminRead: true };
+            }
+            return msg;
+        });
+
+        if (changed) {
+            await db.saveMessages(updatedMessages);
+        }
+
         return res.status(200).json({ success: true });
     } catch (error) {
         console.error('Error marking admin read:', error);
@@ -160,11 +214,20 @@ app.post('/api/user/mark-read', async (req, res) => {
         const { userId } = req.body;
         if (!userId) return res.status(400).json({ success: false });
 
-        // Mark replies for this user as read
-        await Message.updateMany(
-            { userId, reply: { $exists: true, $ne: null }, userRead: false },
-            { userRead: true }
-        );
+        const messages = await db.getMessages();
+        let changed = false;
+
+        const updatedMessages = messages.map(msg => {
+            if (msg.userId === userId && msg.reply && msg.userRead === false) {
+                changed = true;
+                return { ...msg, userRead: true };
+            }
+            return msg;
+        });
+
+        if (changed) {
+            await db.saveMessages(updatedMessages);
+        }
 
         return res.status(200).json({ success: true });
     } catch (error) {
@@ -240,4 +303,9 @@ app.get('/health', (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
+    if (process.env.KV_REST_API_URL) {
+        console.log('✅ Connected to Vercel KV');
+    } else {
+        console.log('📂 Running in Local Mode (FileSystem)');
+    }
 });

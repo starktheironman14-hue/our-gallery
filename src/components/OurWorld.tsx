@@ -41,8 +41,12 @@ const OurWorld = ({ onBack }: OurWorldProps) => {
     const [selectedApp, setSelectedApp] = useState<number | null>(null);
 
     return (
-        <section className="relative min-h-screen py-20 px-6 overflow-hidden">
-            {/* Background image */}
+        <motion.section
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="relative min-h-screen py-20 px-6 overflow-hidden"
+        >
             <div
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat"
                 style={{
@@ -50,13 +54,11 @@ const OurWorld = ({ onBack }: OurWorldProps) => {
                 }}
             />
 
-            {/* Overlay for better text visibility */}
             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
             <FloatingEmojis position="all" />
 
             <div className="relative z-10 max-w-6xl mx-auto">
-                {/* Back button */}
                 <motion.button
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -67,7 +69,6 @@ const OurWorld = ({ onBack }: OurWorldProps) => {
                     ← Back
                 </motion.button>
 
-                {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: -30 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -83,7 +84,6 @@ const OurWorld = ({ onBack }: OurWorldProps) => {
                     </div>
                 </motion.div>
 
-                {/* App grid */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
                     {apps.map((app, index) => (
                         <motion.button
@@ -113,7 +113,6 @@ const OurWorld = ({ onBack }: OurWorldProps) => {
                     ))}
                 </div>
 
-                {/* Quick peek animation */}
                 {selectedApp !== null && (
                     <motion.div
                         initial={{ opacity: 0, scale: 0.8, y: 50 }}
@@ -121,7 +120,6 @@ const OurWorld = ({ onBack }: OurWorldProps) => {
                         exit={{ opacity: 0, scale: 0.8, y: 50 }}
                         className="glass p-12 rounded-3xl text-center"
                     >
-                        {/* Animated icons */}
                         <div className="flex justify-center gap-4 mb-8">
                             {apps[selectedApp].animation.map((emoji, i) => (
                                 <motion.div
@@ -144,7 +142,6 @@ const OurWorld = ({ onBack }: OurWorldProps) => {
                             ))}
                         </div>
 
-                        {/* Message */}
                         <motion.p
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -156,7 +153,7 @@ const OurWorld = ({ onBack }: OurWorldProps) => {
                     </motion.div>
                 )}
             </div>
-        </section>
+        </motion.section>
     );
 };
 

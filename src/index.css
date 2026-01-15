@@ -1,192 +1,35 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Dancing+Script:wght@400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  body {
-    @apply bg-[#0B0F1A] text-[#f8f9fa] font-sans;
-    overflow-x: hidden;
-  }
-}
-
 @layer components {
-
-  /* Global Glassmorphism Class */
-  .glass {
-    @apply backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl shadow-xl;
-  }
-
-  /* Typing Animation */
-  .typing {
-    overflow: hidden;
-    border-right: 2px solid white;
-    white-space: nowrap;
-    animation: typing 4s steps(40), blink 0.7s infinite;
-  }
-
-  @keyframes typing {
-    from {
-      width: 0;
+    .glass {
+        @apply bg-white/10 backdrop-blur-md border border-white/20 shadow-xl;
     }
 
-    to {
-      width: 100%;
-    }
-  }
-
-  @keyframes blink {
-    50% {
-      border-color: transparent;
-    }
-  }
-
-  /* Breathing Animation */
-  .breathe {
-    animation: breathe 4s ease-in-out infinite;
-  }
-
-  @keyframes breathe {
-    0% {
-      transform: scale(1);
+    .gradient-text {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500;
     }
 
-    50% {
-      transform: scale(1.05);
+    /* Hide scrollbar for Chrome/Safari/Opera */
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
     }
 
-    100% {
-      transform: scale(1);
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        /* IE and Edge */
+        scrollbar-width: none;
+        /* Firefox */
     }
-  }
-
-  /* Folder Hover Effect */
-  .folder {
-    transition: transform 0.3s ease;
-  }
-
-  .folder:hover {
-    transform: translateY(-6px);
-  }
-
-  /* Glow Effect */
-  .glow {
-    box-shadow: 0 0 20px rgba(255, 126, 179, 0.5);
-  }
-
-  .glow:hover {
-    box-shadow: 0 0 40px rgba(255, 126, 179, 0.8);
-  }
 }
 
-@layer utilities {
-
-  /* Custom Scrollbar */
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: #0B0F1A;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, #ff758c 0%, #ff7eb3 100%);
-    border-radius: 10px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, #ff7eb3 0%, #cdb4db 100%);
-  }
-
-  /* Pulse Animation */
-  .animate-pulse-slow {
-    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-
-  @keyframes pulse {
-
-    0%,
-    100% {
-      opacity: 0.1;
-    }
-
-    50% {
-      opacity: 0.2;
-    }
-  }
-
-  /* Floating Animation */
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  @keyframes float {
-
-    0%,
-    100% {
-      transform: translateY(0px);
-    }
-
-    50% {
-      transform: translateY(-20px);
-    }
-  }
-
-  /* Gradient Text */
-  .gradient-text {
-    @apply text-transparent bg-clip-text bg-gradient-to-r from-[#ff758c] to-[#ff7eb3];
-  }
-
-  /* Star Twinkle */
-  .twinkle {
-    animation: twinkle 3s ease-in-out infinite;
-  }
-
-  @keyframes twinkle {
-
-    0%,
-    100% {
-      opacity: 0.2;
-    }
-
-    50% {
-      opacity: 1;
-    }
-  }
-}
-
-/* Font Family Utilities */
-.font-display {
-  font-family: 'Playfair Display', serif;
-}
-
-.font-sans {
-  font-family: 'Inter', sans-serif;
-}
-
-.font-handwriting {
-  font-family: 'Dancing Script', cursive;
-}
-
-/* Selection Color */
-::selection {
-  background-color: rgba(255, 126, 179, 0.3);
-  color: #f8f9fa;
-}
-
-/* Smooth Scroll */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Remove default focus outline and add custom */
-*:focus {
-  outline: none;
-}
-
-*:focus-visible {
-  outline: 2px solid #ff7eb3;
-  outline-offset: 2px;
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: #05080F;
+    /* midnight-950 */
+    color: white;
 }

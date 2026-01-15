@@ -1,77 +1,51 @@
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface FloatingEmojisProps {
-    position?: 'top' | 'bottom' | 'side' | 'all';
+    position?: 'all' | 'left' | 'right' | 'center';
 }
 
-const topEmojis = ['💋', '🫀', '❤️', '🥵', '🥰', '🫶🏻', '💕', '😍', '😘'];
-const bottomEmojis = ['😌', '🤭', '👄', '👅', '🌹', '🥀', '💐', '🌸', '🌺'];
-const sideEmojis = ['🌟', '⚡️', '🍌', '🍑', '🍓', '🍒'];
-const heartVariations = ['🩷', '🧡', '🩵', '❤️‍🔥', '❤️‍🩹', '💞', '💓', '💘', '💖', '💝', '♾️'];
+const emojis = ['❤️', '💖', '💕', '💞', '💓', '💗', '💝', '💘', '✨', '🦋', '🌹'];
 
 const FloatingEmojis = ({ position = 'all' }: FloatingEmojisProps) => {
-    const [emojis, setEmojis] = useState<Array<{
-        emoji: string;
-        x: number;
-        y: number;
-        delay: number;
-        duration: number;
-        rotation: number;
-    }>>([]);
+    const [elements, setElements] = useState<Array<{ id: number; emoji: string; x: number; delay: number; duration: number }>>([]);
 
     useEffect(() => {
-        const allEmojis = position === 'all'
-            ? [...topEmojis, ...bottomEmojis, ...sideEmojis, ...heartVariations]
-            : position === 'top'
-                ? topEmojis
-                : position === 'bottom'
-                    ? bottomEmojis
-                    : sideEmojis;
-
-        const emojiElements = Array.from({ length: 30 }, () => {
-            const emoji = allEmojis[Math.floor(Math.random() * allEmojis.length)];
-            return {
-                emoji,
-                x: Math.random() * 100,
-                y: position === 'top' ? -10 : position === 'bottom' ? 110 : Math.random() * 100,
-                delay: Math.random() * 5,
-                duration: 8 + Math.random() * 10,
-                rotation: Math.random() * 360,
-            };
-        });
-
-        setEmojis(emojiElements);
-    }, [position]);
+        // Create random floating elements
+        const count = 15;
+        const newElements = Array.from({ length: count }).map((_, i) => ({
+            id: i,
+            emoji: emojis[Math.floor(Math.random() * emojis.length)],
+            x: Math.random() * 100, // percentage
+            delay: Math.random() * 5,
+            duration: 10 + Math.random() * 10,
+        }));
+        setElements(newElements);
+    }, []);
 
     return (
-        <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-            {emojis.map((item, index) => (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+            {elements.map((el) => (
                 <motion.div
-                    key={index}
-                    className="absolute text-2xl md:text-3xl opacity-60"
-                    style={{
-                        left: `${item.x}%`,
-                        top: `${item.y}%`,
-                    }}
+                    key={el.id}
+                    initial={{ opacity: 0, y: '110vh', x: `${el.x}vw` }}
                     animate={{
-                        y: position === 'top'
-                            ? [0, window.innerHeight + 100]
-                            : position === 'bottom'
-                                ? [0, -window.innerHeight - 100]
-                                : [-50, 50, -50],
-                        x: [0, Math.random() * 100 - 50, 0],
-                        rotate: [item.rotation, item.rotation + 360],
-                        opacity: [0, 0.6, 0.6, 0],
+                        opacity: [0, 0.7, 0],
+                        y: '-10vh',
+                        rotate: [0, 45, -45, 0]
                     }}
                     transition={{
-                        duration: item.duration,
-                        delay: item.delay,
+                        duration: el.duration,
                         repeat: Infinity,
-                        ease: "easeInOut",
+                        delay: el.delay,
+                        ease: "linear"
+                    }}
+                    className="absolute text-2xl md:text-4xl filter drop-shadow-lg"
+                    style={{
+                        left: 0, // Base position handled by initial x
                     }}
                 >
-                    {item.emoji}
+                    {el.emoji}
                 </motion.div>
             ))}
         </div>

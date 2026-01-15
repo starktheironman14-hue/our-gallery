@@ -45,5 +45,27 @@
     "reply": "hii",
     "replyTimestamp": "2026-01-09T13:53:20.121Z",
     "userRead": true
+  },
+  {
+    "_id": "1768399894629",
+    "userId": "shubhi_xo2yt7bvx",
+    "type": "emotion",
+    "content": "hi\n\n",
+    "mood": "neutral",
+    "timestamp": "2026-01-14T14:11:34.629Z",
+    "adminRead": true,
+    "userRead": false
+  },
+  {
+    "_id": "1768470144100",
+    "userId": "shubhi_xo2yt7bvx",
+    "type": "emotion",
+    "content": "hi",
+    "mood": "neutral",
+    "timestamp": "2026-01-15T09:42:24.100Z",
+    "adminRead": true,
+    "userRead": false,
+    "reply": "his",
+    "replyTimestamp": "2026-01-15T10:36:01.343Z"
   }
 ]

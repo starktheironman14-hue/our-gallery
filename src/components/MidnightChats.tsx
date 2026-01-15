@@ -3,10 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
 
-interface MidnightChatsProps {
-    onBack: () => void;
-}
-
+// Use same interface as before
 interface Message {
     _id: string;
     sender: string;
@@ -14,7 +11,10 @@ interface Message {
     time: string;
 }
 
-// Conversation template to seed if D is empty
+interface MidnightChatsProps {
+    onBack: () => void;
+}
+
 const initialConversationSeed = [
     { sender: 'aaru', text: 'Hello baby 💕', time: '11:47 PM' },
     { sender: 'shubhi', text: 'Ha babu 🥰', time: '11:48 PM' },
@@ -66,15 +66,12 @@ const MidnightChats = ({ onBack }: MidnightChatsProps) => {
     };
 
     // --- Backend Integration ---
-
-    // Fetch messages on Mount
     useEffect(() => {
         const fetchMessages = async () => {
             try {
                 const res = await fetch('/api/messages');
                 const data = await res.json();
 
-                // If DB is empty, seed it with initial conversation
                 if (Array.isArray(data) && data.length === 0) {
                     await seedDatabase();
                 } else {
@@ -82,13 +79,11 @@ const MidnightChats = ({ onBack }: MidnightChatsProps) => {
                 }
             } catch (err) {
                 console.error("Failed to fetch messages", err);
-                // Fallback to static if backend fails locally
                 setMessages(initialConversationSeed.map(m => ({ ...m, _id: Math.random().toString() })));
             }
         };
         fetchMessages();
 
-        // Polling interaction every 5 seconds to get new messages from her
         const interval = setInterval(async () => {
             try {
                 const res = await fetch('/api/messages');
@@ -113,7 +108,6 @@ const MidnightChats = ({ onBack }: MidnightChatsProps) => {
                 body: JSON.stringify(msg)
             });
         }
-        // Fetch again after seeding
         const res = await fetch('/api/messages');
         const data = await res.json();
         setMessages(data);
@@ -161,7 +155,6 @@ const MidnightChats = ({ onBack }: MidnightChatsProps) => {
             time: currentTime
         };
 
-        // Optimistic Update
         const tempId = Math.random().toString();
         const optimisticMsg = { ...msgPayload, _id: tempId };
         setMessages(prev => [...prev, optimisticMsg]);
@@ -175,8 +168,6 @@ const MidnightChats = ({ onBack }: MidnightChatsProps) => {
                 body: JSON.stringify(msgPayload)
             });
             const savedMsg = await res.json();
-
-            // Replace optimistic with real
             setMessages(prev => prev.map(m => m._id === tempId ? savedMsg : m));
         } catch (err) {
             console.error("Failed to save message", err);
@@ -187,12 +178,10 @@ const MidnightChats = ({ onBack }: MidnightChatsProps) => {
         setNewMessage(prev => prev + emoji);
     };
 
-    // --- Long Press / Delete Logic ---
-
     const startLongPress = (id: string) => {
         longPressTimeout.current = setTimeout(() => {
             setShowDeleteMenu(id);
-        }, 600); // 600ms hold to trigger
+        }, 600);
     };
 
     const cancelLongPress = () => {
@@ -206,37 +195,33 @@ const MidnightChats = ({ onBack }: MidnightChatsProps) => {
         if (!showDeleteMenu) return;
 
         const idToDelete = showDeleteMenu;
-        setShowDeleteMenu(null); // Close menu immediately
+        setShowDeleteMenu(null);
 
-        // Optimistic delete
         setMessages(prev => prev.filter(m => m._id !== idToDelete));
 
         try {
             await fetch(`/api/messages?id=${idToDelete}`, { method: 'DELETE' });
         } catch (err) {
             console.error("Failed to delete", err);
-            // Revert if needed, but for now simple is ok
         }
     };
 
-    // LOCK SCREEN COMPONENT
     if (accessState === 'locked') {
         return (
-            <section className="min-h-screen bg-black flex flex-col items-center justify-center p-6 relative overflow-hidden">
-                {/* Background KitKat photo blurred */}
-                <div
-                    className="absolute inset-0 z-0 opacity-30 blur-xl"
-                    style={{
-                        backgroundImage: 'url(/kitkat-snap.jpg)',
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                    }}
+            <motion.section
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="min-h-screen bg-black flex flex-col items-center justify-center p-6 relative overflow-hidden"
+            >
+                <div className="absolute inset-0 z-0 opacity-30 blur-xl"
+                    style={{ backgroundImage: 'url(/kitkat-snap.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}
                 />
 
                 <div className="relative z-10 w-full max-w-sm">
                     <button
                         onClick={onBack}
-                        className="absolute -top-16 left-0 text-white text-xl flex items-center gap-2"
+                        className="absolute -top-16 left-0 text-white text-xl flex items-center gap-2 hover:scale-105 transition-transform"
                     >
                         ← Back
                     </button>
@@ -247,57 +232,42 @@ const MidnightChats = ({ onBack }: MidnightChatsProps) => {
                         <p className="text-white/60 font-sans text-sm">Enter Passcode to Enter</p>
                     </div>
 
-                    {/* PIN Dots */}
                     <div className="flex justify-center gap-4 mb-12">
                         {[0, 1, 2, 3].map((i) => (
-                            <div
-                                key={i}
-                                className={`w-4 h-4 rounded-full border-2 border-white transition-all ${i < pin.length ? 'bg-white' : 'bg-transparent'
-                                    }`}
-                            />
+                            <div key={i} className={`w-4 h-4 rounded-full border-2 border-white transition-all ${i < pin.length ? 'bg-white' : 'bg-transparent'}`} />
                         ))}
                     </div>
 
-                    {/* Hint */}
                     <div className="text-center mb-8">
                         <p className="text-white/40 text-xs font-sans">
                             Hint: For Kitkat password is her year of birth 🎂
                         </p>
                     </div>
 
-                    {/* Keypad */}
                     <div className="grid grid-cols-3 gap-6 max-w-[280px] mx-auto">
                         {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-                            <button
-                                key={num}
-                                onClick={() => handlePinClick(num.toString())}
-                                className="w-16 h-16 rounded-full bg-white/10 hover:bg-white/20 text-white text-2xl font-sans backdrop-blur-md transition-all active:scale-95 flex items-center justify-center"
-                            >
+                            <button key={num} onClick={() => handlePinClick(num.toString())} className="w-16 h-16 rounded-full bg-white/10 hover:bg-white/20 text-white text-2xl font-sans backdrop-blur-md transition-all active:scale-95 flex items-center justify-center">
                                 {num}
                             </button>
                         ))}
-                        <div /> {/* Empty slot */}
-                        <button
-                            onClick={() => handlePinClick('0')}
-                            className="w-16 h-16 rounded-full bg-white/10 hover:bg-white/20 text-white text-2xl font-sans backdrop-blur-md transition-all active:scale-95 flex items-center justify-center"
-                        >
+                        <div />
+                        <button onClick={() => handlePinClick('0')} className="w-16 h-16 rounded-full bg-white/10 hover:bg-white/20 text-white text-2xl font-sans backdrop-blur-md transition-all active:scale-95 flex items-center justify-center">
                             0
                         </button>
-                        <button
-                            onClick={handleBackspace}
-                            className="w-16 h-16 rounded-full text-white text-xl flex items-center justify-center hover:text-red-400 transition-colors"
-                        >
+                        <button onClick={handleBackspace} className="w-16 h-16 rounded-full text-white text-xl flex items-center justify-center hover:text-red-400 transition-colors">
                             ⌫
                         </button>
                     </div>
                 </div>
-            </section>
+            </motion.section>
         );
     }
 
-    // MAIN CHAT INTERFACE
     return (
-        <section
+        <motion.section
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             className="relative min-h-screen z-0"
             style={{
                 backgroundImage: 'url(/kitkat-snap.jpg)',
@@ -306,11 +276,9 @@ const MidnightChats = ({ onBack }: MidnightChatsProps) => {
                 backgroundRepeat: 'no-repeat',
             }}
         >
-            {/* Dark overlay for better text visibility */}
             <div className="absolute inset-0 bg-black/40 backdrop-blur-sm z-0" />
 
             <div className="relative z-10 h-screen flex flex-col max-w-2xl mx-auto">
-                {/* Snapchat-style header */}
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -335,7 +303,6 @@ const MidnightChats = ({ onBack }: MidnightChatsProps) => {
                     </div>
                 </motion.div>
 
-                {/* Chat messages area */}
                 <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 scrollbar-hide">
                     {messages.map((msg, index) => {
                         const isMyMessage = (accessState === 'aaru' && msg.sender === 'aaru') ||
@@ -350,13 +317,12 @@ const MidnightChats = ({ onBack }: MidnightChatsProps) => {
                             >
                                 <div
                                     className={`max-w-[75%] ${isMyMessage ? 'items-end' : 'items-start'} flex flex-col`}
-                                    // Touch / Mouse Events for Long Press
                                     onTouchStart={() => startLongPress(msg._id)}
                                     onTouchEnd={cancelLongPress}
                                     onMouseDown={() => startLongPress(msg._id)}
                                     onMouseUp={cancelLongPress}
                                     onMouseLeave={cancelLongPress}
-                                    onContextMenu={(e) => { e.preventDefault(); setShowDeleteMenu(msg._id); }} // Right click support too
+                                    onContextMenu={(e) => { e.preventDefault(); setShowDeleteMenu(msg._id); }}
                                 >
                                     <div
                                         className={`px-4 py-3 rounded-2xl backdrop-blur-md ${isMyMessage
@@ -374,7 +340,6 @@ const MidnightChats = ({ onBack }: MidnightChatsProps) => {
                     <div ref={chatEndRef} />
                 </div>
 
-                {/* DELETE CONFIRMATION MODAL */}
                 <AnimatePresence>
                     {showDeleteMenu && (
                         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -404,8 +369,6 @@ const MidnightChats = ({ onBack }: MidnightChatsProps) => {
                     )}
                 </AnimatePresence>
 
-
-                {/* EMOJI PICKER POPUP */}
                 <AnimatePresence>
                     {showEmojiPicker && (
                         <motion.div
@@ -414,16 +377,7 @@ const MidnightChats = ({ onBack }: MidnightChatsProps) => {
                             exit={{ opacity: 0, y: 20, scale: 0.95 }}
                             className="fixed bottom-24 left-1/2 -translate-x-1/2 w-full max-w-sm h-72 bg-black/80 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl overflow-hidden z-30"
                         >
-                            {/* Categories Header - Active State Added */}
-                            <div
-                                className="flex overflow-x-auto p-2 gap-2"
-                                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                            >
-                                <style>{`
-                                    .scrollbar-hide::-webkit-scrollbar {
-                                        display: none;
-                                    }
-                                `}</style>
+                            <div className="flex overflow-x-auto p-2 gap-2" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                                 {emojiCategories.map((cat, i) => (
                                     <button
                                         key={i}
@@ -437,30 +391,15 @@ const MidnightChats = ({ onBack }: MidnightChatsProps) => {
                                     </button>
                                 ))}
                             </div>
-
-                            {/* Emojis Grid - Ref Mapped */}
-                            <div
-                                className="h-full overflow-y-auto p-4 pb-14 scrollbar-hide"
-                                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                            >
+                            <div className="h-full overflow-y-auto p-4 pb-14 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                                 {emojiCategories.map((category, catIndex) => (
-                                    <div
-                                        key={catIndex}
-                                        ref={el => {
-                                            if (el) categoryRefs.current[catIndex] = el;
-                                        }}
-                                        className="mb-6"
-                                    >
+                                    <div key={catIndex} ref={el => { if (el) categoryRefs.current[catIndex] = el; }} className="mb-6">
                                         <h3 className="text-white/30 text-[10px] font-sans uppercase tracking-widest mb-2 px-1">
                                             {category.name}
                                         </h3>
                                         <div className="grid grid-cols-7 gap-2">
                                             {category.emojis.map((emoji, emoIndex) => (
-                                                <button
-                                                    key={emoIndex}
-                                                    onClick={() => handleEmojiClick(emoji)}
-                                                    className="w-8 h-8 flex items-center justify-center hover:bg-white/20 rounded-full transition-all active:scale-95 text-xl"
-                                                >
+                                                <button key={emoIndex} onClick={() => handleEmojiClick(emoji)} className="w-8 h-8 flex items-center justify-center hover:bg-white/20 rounded-full transition-all active:scale-95 text-xl">
                                                     {emoji}
                                                 </button>
                                             ))}
@@ -472,7 +411,6 @@ const MidnightChats = ({ onBack }: MidnightChatsProps) => {
                     )}
                 </AnimatePresence>
 
-                {/* Snapchat-style bottom bar */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -480,7 +418,6 @@ const MidnightChats = ({ onBack }: MidnightChatsProps) => {
                 >
                     <div className="bg-black/60 backdrop-blur-md rounded-full px-2 py-2 flex items-center gap-2 relative z-40">
                         <button className="p-2 text-white text-2xl hover:scale-110 transition-transform flex-shrink-0">📷</button>
-
                         <div className="flex-1 bg-white/20 rounded-full flex items-center px-4 py-2 transition-all focus-within:bg-white/30">
                             <input
                                 type="text"
@@ -492,14 +429,8 @@ const MidnightChats = ({ onBack }: MidnightChatsProps) => {
                                 className="bg-transparent border-none outline-none text-white placeholder-white/70 w-full font-sans text-base"
                             />
                         </div>
-
                         {newMessage.trim() ? (
-                            <button
-                                onClick={handleSendMessage}
-                                className="px-4 py-2 text-blue-400 font-bold hover:scale-105 transition-transform"
-                            >
-                                SEND
-                            </button>
+                            <button onClick={handleSendMessage} className="px-4 py-2 text-blue-400 font-bold hover:scale-105 transition-transform">SEND</button>
                         ) : (
                             <div className="flex gap-1">
                                 <button className="p-2 text-white text-2xl hover:scale-110 transition-transform">🎤</button>
@@ -514,7 +445,7 @@ const MidnightChats = ({ onBack }: MidnightChatsProps) => {
                     </div>
                 </motion.div>
             </div>
-        </section>
+        </motion.section>
     );
 };
 

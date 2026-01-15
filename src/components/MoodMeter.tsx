@@ -37,7 +37,25 @@ const MoodMeter = ({ onBack }: MoodMeterProps) => {
     const [selectedMood, setSelectedMood] = useState<number | null>(null);
 
     return (
-        <section className="relative min-h-screen py-20 px-6 bg-gradient-to-br from-rose-950 via-black to-rose-950 overflow-hidden flex items-center justify-center">
+        <motion.section
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="relative min-h-screen py-20 px-6 overflow-hidden flex items-center justify-center bg-black"
+        >
+            {/* Background Image Container with 10px spacing acting as a frame */}
+            <div className="absolute inset-[10px] rounded-[20px] overflow-hidden z-0 shadow-2xl border border-white/10">
+                <div
+                    className="absolute inset-0 bg-center transform hover:scale-105 transition-transform duration-[20s]"
+                    style={{
+                        backgroundImage: "url('/mood_bg_v2.jpg')",
+                        backgroundSize: '100% 100%' // Force 16:10 aspect ratio by stretching to fill container
+                    }}
+                />
+                {/* Dark overlay for better text readability - No blur */}
+                <div className="absolute inset-0 bg-black/40" />
+            </div>
+
             <FloatingEmojis position="all" />
 
             <div className="relative z-10 max-w-4xl mx-auto w-full">
@@ -51,7 +69,6 @@ const MoodMeter = ({ onBack }: MoodMeterProps) => {
                     ← Back
                 </motion.button>
 
-                {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: -30 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -152,7 +169,7 @@ const MoodMeter = ({ onBack }: MoodMeterProps) => {
                     )}
                 </AnimatePresence>
             </div>
-        </section>
+        </motion.section>
     );
 };
 
