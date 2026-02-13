@@ -13,6 +13,7 @@ import AdminDashboard from './components/AdminDashboard';
 import WriteEmotions from './components/WriteEmotions';
 import TelegramMessage from './components/TelegramMessage';
 import ErrorPage from './components/ErrorPage';
+import ValentineSpecial from './components/ValentineSpecial';
 
 export const router = createBrowserRouter([
     {
@@ -29,6 +30,7 @@ export const router = createBrowserRouter([
             { path: 'our-world', element: <OurWorld /> },
             { path: 'always-here', element: <AlwaysHere /> },
             { path: 'forever', element: <Forever /> },
+            { path: 'valentine-special', element: <ValentineSpecial /> },
             { path: 'admin', element: <AdminDashboard /> },
             { path: 'write-emotions', element: <WriteEmotions /> },
             { path: 'telegram-message', element: <TelegramMessage /> },

@@ -13,6 +13,7 @@ const Navigation = () => {
         { id: 'our-world', label: 'Our World', emoji: '🌍', color: 'from-emerald-500 to-teal-500' },
         { id: 'always-here', label: 'Always Here', emoji: '🤗', color: 'from-indigo-500 to-violet-500' },
         { id: 'forever', label: 'Forever', emoji: '♾️', color: 'from-gray-700 to-gray-900' },
+        { id: 'valentine-special', label: 'Valentine Special', emoji: '💕', color: 'from-pink-500 to-red-500' },
         { id: 'write-emotions', label: 'Write Emotions', emoji: '✍️', color: 'from-pink-400 to-rose-400' },
         { id: 'admin', label: 'Admin Dashboard', emoji: '⚙️', color: 'from-slate-600 to-slate-800' },
     ];

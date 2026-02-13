@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Day Special ❤️</title>
+    <link rel="stylesheet" href="valentine.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <canvas id="hearts-canvas"></canvas>
+        <div class="hero-content">
+            <h1 class="hero-title">From the day you came into my life, everything changed ❤️</h1>
+            <p class="hero-subtitle">
+                You turned my ordinary days into extraordinary moments, my silence into laughter, 
+                and my dreams into beautiful reality. Every heartbeat whispers your name, 
+                and every moment with you feels like a gift I never knew I needed.
+            </p>
+        </div>
+    </section>
+
+    <!-- Love Story Timeline -->
+    <section class="timeline-section" id="timeline">
+        <h2 class="section-title">Our Love Story</h2>
+        <div class="timeline">
+            <div class="timeline-item" data-aos="fade-up">
+                <div class="timeline-dot"></div>
+                <div class="timeline-card">
+                    <div class="timeline-icon">💬</div>
+                    <h3>First Chat</h3>
+                    <p class="timeline-date">The Beginning</p>
+                    <p>That first message changed everything. A simple "Hi" that opened the door to endless conversations and a connection I never saw coming.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-aos="fade-up">
+                <div class="timeline-dot"></div>
+                <div class="timeline-card">
+                    <div class="timeline-icon">📞</div>
+                    <h3>First Call</h3>
+                    <p class="timeline-date">Hearing Your Voice</p>
+                    <p>The moment I heard your voice, time stood still. Hours felt like minutes, and I knew I could listen to you talk forever.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-aos="fade-up">
+                <div class="timeline-dot"></div>
+                <div class="timeline-card">
+                    <div class="timeline-icon">✨</div>
+                    <h3>First Meet</h3>
+                    <p class="timeline-date">Face to Face</p>
+                    <p>Seeing you in person for the first time made my heart skip a beat. Your smile was even more beautiful than I imagined.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-aos="fade-up">
+                <div class="timeline-dot"></div>
+                <div class="timeline-card">
+                    <div class="timeline-icon">🌟</div>
+                    <h3>Special Memory</h3>
+                    <p class="timeline-date">Unforgettable Moment</p>
+                    <p>That day we spent together, laughing until our stomachs hurt, sharing dreams under the stars. It's etched in my heart forever.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-aos="fade-up">
+                <div class="timeline-dot"></div>
+                <div class="timeline-card">
+                    <div class="timeline-icon">❤️</div>
+                    <h3>Today</h3>
+                    <p class="timeline-date">Every Day With You</p>
+                    <p>Every day with you is a new chapter in our beautiful story. Here's to all the moments we've shared and all the memories yet to come.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photo Gallery -->
+    <section class="gallery-section" id="gallery">
+        <h2 class="section-title">Our Precious Moments</h2>
+        <div class="carousel-container">
+            <button class="carousel-btn prev" id="prevBtn">‹</button>
+            <div class="carousel">
+                <div class="carousel-track" id="carouselTrack">
+                    <!-- Placeholder images - replace with actual photos -->
+                    <div class="carousel-slide">
+                        <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=800&h=600&fit=crop" alt="Memory 1">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800&h=600&fit=crop" alt="Memory 2">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=800&h=600&fit=crop" alt="Memory 3">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=800&h=600&fit=crop" alt="Memory 4">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=800&h=600&fit=crop" alt="Memory 5">
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-btn next" id="nextBtn">›</button>
+        </div>
+        <div class="carousel-dots" id="carouselDots"></div>
+    </section>
+
+    <!-- Secret Love Message -->
+    <section class="secret-section" id="secret">
+        <button class="secret-btn" id="secretBtn">Click if you love me ❤️</button>
+    </section>
+
+    <!-- Modal for Secret Message -->
+    <div class="modal" id="secretModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">×</button>
+            <h2>My Dearest Love 💕</h2>
+            <p>
+                Every moment with you is a treasure I hold close to my heart. 
+                You are my sunshine on cloudy days, my comfort in times of doubt, 
+                and my greatest adventure. Your smile lights up my world, and your 
+                love makes me the luckiest person alive.
+            </p>
+            <p>
+                I promise to cherish you, support you, and love you with all that I am. 
+                Today, tomorrow, and for all the days to come. You are my forever, 
+                my always, my everything.
+            </p>
+            <p class="modal-signature">Forever yours ❤️</p>
+        </div>
+    </div>
+
+    <!-- Countdown Timer -->
+    <section class="countdown-section" id="countdown">
+        <h2 class="section-title">Countdown to Valentine's Day 2027</h2>
+        <div class="countdown-timer" id="countdownTimer">
+            <div class="countdown-item">
+                <span class="countdown-value" id="days">000</span>
+                <span class="countdown-label">Days</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-value" id="hours">00</span>
+                <span class="countdown-label">Hours</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-value" id="minutes">00</span>
+                <span class="countdown-label">Minutes</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-value" id="seconds">00</span>
+                <span class="countdown-label">Seconds</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Open When Section -->
+    <section class="open-when-section" id="openWhen">
+        <h2 class="section-title">Open When...</h2>
+        <div class="open-when-cards">
+            <div class="open-when-card" data-message="sad">
+                <div class="card-front">
+                    <div class="card-icon">😢</div>
+                    <h3>Open when you're sad</h3>
+                </div>
+                <div class="card-back">
+                    <p>Remember that storms don't last forever, and neither will this sadness. You are stronger than you know, braver than you believe, and more loved than you can imagine. I'm always here for you, ready to hold you tight and remind you that better days are coming. Your smile is too beautiful to stay hidden for long. 💙</p>
+                </div>
+            </div>
+
+            <div class="open-when-card" data-message="miss">
+                <div class="card-front">
+                    <div class="card-icon">💭</div>
+                    <h3>Open when you miss me</h3>
+                </div>
+                <div class="card-back">
+                    <p>Close your eyes and feel my presence. I'm thinking of you right now, missing you just as much. Distance means nothing when someone means everything. Every second apart brings us closer to the moment we'll be together again. Until then, keep me in your heart, because that's where you'll always find me. 💜</p>
+                </div>
+            </div>
+
+            <div class="open-when-card" data-message="motivation">
+                <div class="card-front">
+                    <div class="card-icon">🚀</div>
+                    <h3>Open when you need motivation</h3>
+                </div>
+                <div class="card-back">
+                    <p>You are capable of amazing things! Every challenge you face is just another opportunity to show the world how incredible you are. Don't doubt yourself—you've overcome so much already. Take a deep breath, believe in yourself, and go conquer whatever stands in your way. I believe in you with all my heart! 💪✨</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Background Music Toggle -->
+    <button class="music-toggle" id="musicToggle">
+        <span class="music-icon">🎵</span>
+    </button>
+
+    <!-- Hidden Audio Element -->
+    <audio id="bgMusic" loop>
+        <!-- Replace with your audio file -->
+        <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="valentine.js"></script>
+</body>
+</html>
